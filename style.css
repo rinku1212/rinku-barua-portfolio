@@ -106,7 +106,6 @@ button {
   margin: 6px 0;
 }
 
-
 /* HERO */
 
 .hero {
@@ -124,6 +123,19 @@ button {
 
 .hero-content {
   max-width: 720px;
+}
+
+/* PERSONAL NAME */
+
+.hero-name {
+  color: var(--white);
+  font-family: inherit;
+  font-size: clamp(42px, 5.5vw, 64px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin: 0 0 22px;
+  padding: 0;
 }
 
 .eyebrow {
@@ -276,7 +288,6 @@ button {
   padding-top: 16px;
 }
 
-
 /* GENERAL SECTIONS */
 
 .section {
@@ -323,7 +334,6 @@ button {
   color: var(--dark-muted);
 }
 
-
 /* PROFILE HIGHLIGHTS */
 
 .profile-highlights {
@@ -352,7 +362,6 @@ button {
   color: var(--muted);
   font-size: 12px;
 }
-
 
 /* EXPERIENCE */
 
@@ -412,7 +421,6 @@ button {
   padding: 3px 0;
 }
 
-
 /* EXPERTISE */
 
 .expertise-grid {
@@ -457,7 +465,6 @@ button {
   line-height: 1.7;
 }
 
-
 /* CONTRIBUTIONS */
 
 .contribution-grid {
@@ -500,7 +507,6 @@ button {
   margin-top: 25px;
   max-width: 800px;
 }
-
 
 /* COLOUR CAT INITIATIVE */
 
@@ -548,7 +554,6 @@ button {
   color: #a17c40;
 }
 
-
 /* EDUCATION */
 
 .education-grid {
@@ -572,7 +577,6 @@ button {
   color: var(--dark-muted);
   font-size: 13px;
 }
-
 
 /* CONTACT */
 
@@ -642,7 +646,6 @@ button {
   margin-top: 17px;
 }
 
-
 /* FOOTER */
 
 .site-footer {
@@ -661,7 +664,6 @@ button {
   font-size: 11px;
   margin-top: 5px;
 }
-
 
 /* RESPONSIVE TABLET */
 
@@ -693,7 +695,6 @@ button {
   }
 
 }
-
 
 /* RESPONSIVE MOBILE */
 
@@ -746,6 +747,12 @@ button {
     padding: 65px 7%;
     gap: 45px;
     min-height: auto;
+  }
+
+  .hero-name {
+    font-size: clamp(38px, 10vw, 48px);
+    line-height: 1.1;
+    margin-bottom: 18px;
   }
 
   .hero h1 {
@@ -862,10 +869,13 @@ button {
 
 }
 
-
 /* SMALL MOBILE */
 
 @media (max-width: 380px) {
+
+  .hero-name {
+    font-size: 38px;
+  }
 
   .hero h1 {
     font-size: 32px;
