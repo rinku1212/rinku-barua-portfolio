@@ -49,6 +49,10 @@ button {
   font: inherit;
 }
 
+/* =========================================
+   HEADER & NAVIGATION
+========================================= */
+
 .site-header {
   min-height: 82px;
   padding: 0 7%;
@@ -106,7 +110,9 @@ button {
   margin: 6px 0;
 }
 
-/* HERO */
+/* =========================================
+   HERO SECTION
+========================================= */
 
 .hero {
   min-height: 690px;
@@ -219,65 +225,37 @@ button {
   margin-top: 45px;
 }
 
+/* =========================================
+   PROFESSIONAL PORTRAIT
+========================================= */
+
 .hero-visual {
   width: 100%;
   max-width: 390px;
   justify-self: end;
 }
 
-.portrait-placeholder {
-  min-height: 440px;
-  background: linear-gradient(145deg, #24384f, #172638);
+.portrait-frame {
+  width: 100%;
+  max-width: 380px;
+  height: 460px;
+  overflow: hidden;
   border: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  background: linear-gradient(145deg, #24384f, #172638);
 }
 
-.portrait-placeholder::before,
-.portrait-placeholder::after {
-  content: "";
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border-color: var(--gold);
-  border-style: solid;
-  opacity: 0.7;
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.5s ease;
 }
 
-.portrait-placeholder::before {
-  top: 15px;
-  left: 15px;
-  border-width: 1px 0 0 1px;
-}
-
-.portrait-placeholder::after {
-  right: 15px;
-  bottom: 15px;
-  border-width: 0 1px 1px 0;
-}
-
-.portrait-placeholder span {
-  font-size: 92px;
-  font-weight: 800;
-  color: rgba(255,255,255,0.13);
-  line-height: 1.2;
-}
-
-.portrait-placeholder p {
-  color: var(--gold-light);
-  font-size: 13px;
-  font-weight: 600;
-  margin-top: 12px;
-}
-
-.portrait-placeholder small {
-  color: #9ba9b7;
-  font-size: 9px;
-  letter-spacing: 2px;
-  margin-top: 8px;
+.portrait-frame:hover .profile-photo {
+  transform: scale(1.025);
 }
 
 .visual-caption {
@@ -288,7 +266,9 @@ button {
   padding-top: 16px;
 }
 
-/* GENERAL SECTIONS */
+/* =========================================
+   GENERAL SECTIONS
+========================================= */
 
 .section {
   padding: 105px 9%;
@@ -334,7 +314,9 @@ button {
   color: var(--dark-muted);
 }
 
-/* PROFILE HIGHLIGHTS */
+/* =========================================
+   PROFILE HIGHLIGHTS
+========================================= */
 
 .profile-highlights {
   display: grid;
@@ -363,7 +345,9 @@ button {
   font-size: 12px;
 }
 
-/* EXPERIENCE */
+/* =========================================
+   PROFESSIONAL EXPERIENCE
+========================================= */
 
 .experience-list {
   margin-top: 45px;
@@ -421,7 +405,9 @@ button {
   padding: 3px 0;
 }
 
-/* EXPERTISE */
+/* =========================================
+   CORE EXPERTISE
+========================================= */
 
 .expertise-grid {
   display: grid;
@@ -465,7 +451,9 @@ button {
   line-height: 1.7;
 }
 
-/* CONTRIBUTIONS */
+/* =========================================
+   PROFESSIONAL CONTRIBUTIONS
+========================================= */
 
 .contribution-grid {
   display: grid;
@@ -508,7 +496,9 @@ button {
   max-width: 800px;
 }
 
-/* COLOUR CAT INITIATIVE */
+/* =========================================
+   COLOUR CAT INITIATIVE
+========================================= */
 
 .initiative {
   display: grid;
@@ -554,7 +544,9 @@ button {
   color: #a17c40;
 }
 
-/* EDUCATION */
+/* =========================================
+   EDUCATION & TRAINING
+========================================= */
 
 .education-grid {
   display: grid;
@@ -578,7 +570,9 @@ button {
   font-size: 13px;
 }
 
-/* CONTACT */
+/* =========================================
+   CONTACT
+========================================= */
 
 .contact-section {
   background: #eeede8;
@@ -646,7 +640,9 @@ button {
   margin-top: 17px;
 }
 
-/* FOOTER */
+/* =========================================
+   FOOTER
+========================================= */
 
 .site-footer {
   padding: 35px 9%;
@@ -665,7 +661,9 @@ button {
   margin-top: 5px;
 }
 
-/* RESPONSIVE TABLET */
+/* =========================================
+   RESPONSIVE TABLET
+========================================= */
 
 @media (max-width: 1000px) {
 
@@ -696,7 +694,9 @@ button {
 
 }
 
-/* RESPONSIVE MOBILE */
+/* =========================================
+   RESPONSIVE MOBILE
+========================================= */
 
 @media (max-width: 760px) {
 
@@ -777,8 +777,10 @@ button {
     max-width: 360px;
   }
 
-  .portrait-placeholder {
-    min-height: 370px;
+  .portrait-frame {
+    max-width: 320px;
+    height: 400px;
+    margin: 0 auto;
   }
 
   .section {
@@ -869,7 +871,9 @@ button {
 
 }
 
-/* SMALL MOBILE */
+/* =========================================
+   SMALL MOBILE
+========================================= */
 
 @media (max-width: 380px) {
 
