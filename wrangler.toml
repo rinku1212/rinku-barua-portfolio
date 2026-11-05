@@ -2,14 +2,12 @@ name = "rinku-barua-portfolio"
 pages_build_output_dir = "."
 compatibility_date = "2026-11-06"
 
-# Replace the placeholder after creating a Cloudflare D1 database.
 [[d1_databases]]
 binding = "DB"
 database_name = "rinku-portfolio-db"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "58044790-3387-4717-b18a-ce6d0b7e9fde"
 migrations_dir = "migrations"
 
-# Create a private R2 bucket named rinku-portfolio-media and bind it here.
 [[r2_buckets]]
 binding = "MEDIA"
 bucket_name = "rinku-portfolio-media"
