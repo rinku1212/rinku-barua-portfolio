@@ -1,3 +1,19 @@
+// Remove only ChatGPT's tracking tag from the visible address bar.
+// Other query parameters and the URL hash are preserved. This does not alter server-side referrer logs.
+(function removeChatGPTTrackingTag() {
+  try {
+    const url = new URL(window.location.href);
+    const source = url.searchParams.get("utm_source");
+    if (source && source.trim().toLowerCase() === "chatgpt.com") {
+      url.searchParams.delete("utm_source");
+      const cleanUrl = url.pathname + (url.searchParams.toString() ? "?" + url.searchParams.toString() : "") + url.hash;
+      window.history.replaceState(window.history.state, "", cleanUrl);
+    }
+  } catch {
+    // Leave the current URL unchanged if it cannot be safely parsed.
+  }
+})();
+
 (function () {
   const selectors = {
     "hero.name": [".hero-name"],
