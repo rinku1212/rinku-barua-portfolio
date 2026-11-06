@@ -1,54 +1,54 @@
-# Portfolio Admin Backend — Phase 2
+# Portfolio Admin Backend — Phase 2 (Free-only)
 
-This branch adds the first Cloudflare Pages Functions backend foundation for the portfolio. It does not change the public website files or the COLOUR CAT repository.
+This branch contains backend scaffolding for the portfolio. It does not change the production branch or the COLOUR CAT repository.
 
-## Included
+## Architecture
 
-- Single-admin password login (no editor or second-admin accounts)
-- Signed, eight-hour HttpOnly + Secure + SameSite=Strict session cookie
-- Same-origin checks for state-changing requests
-- D1-backed login throttling (eight failed attempts per 15-minute window)
-- D1 draft-content storage and automatic pre-save revision snapshots
-- Private R2 upload and media-library metadata for JPG, PNG, WEBP and PDF (10 MB maximum)
-- Health endpoint for checking Cloudflare bindings and secrets
+- Cloudflare Pages: public site and Pages Functions.
+- Cloudflare D1: draft content, revisions, media metadata and login throttling.
+- GitHub repository: media files stored under `media/admin/`.
+- This implementation does not require R2.
 
-## Important deployment status
+## Preview setup — do not deploy to Production yet
 
-This is backend scaffolding only. It is intentionally on branch `admin-backend-phase2`, not the production branch. The public portfolio is not yet connected to D1 content and there is no Admin UI login page wired to these endpoints. Do not merge or deploy until the Cloudflare resources and secrets are configured and the frontend integration is tested.
+In Cloudflare Pages settings, configure the Preview environment:
 
-## Cloudflare resources to create
+1. Add D1 binding `DB` pointing to `rinku-portfolio-db`.
+2. Add encrypted secrets:
+   - `ADMIN_PASSWORD`: unique strong password, at least 16 characters.
+   - `SESSION_SECRET`: random secret at least 32 characters, different from the password.
+   - `GITHUB_TOKEN`: fine-grained GitHub token restricted to only `rinku1212/rinku-barua-portfolio`, with **Contents: Read and write** permission only.
+3. Add environment variables:
+   - `GITHUB_OWNER` = `rinku1212`
+   - `GITHUB_REPO` = `rinku-barua-portfolio`
+   - `GITHUB_BRANCH` = `admin-backend-phase2`
+4. Set the Pages Preview branch to `admin-backend-phase2`.
+5. The D1 schema was already created manually using `migrations/0001_initial.sql`; do not run it again unless needed.
 
-1. Create a D1 database named `rinku-portfolio-db`.
-2. Create a private R2 bucket named `rinku-portfolio-media`.
-3. Copy the D1 database ID into `wrangler.toml`, replacing `REPLACE_WITH_D1_DATABASE_ID`.
-4. In Cloudflare Pages project settings, add D1 binding `DB` and R2 binding `MEDIA` for both Preview and Production environments, pointing to the resources above.
-5. Add these encrypted secrets to the Pages project for Preview first:
-   - `ADMIN_PASSWORD`: a unique, strong password (at least 16 characters).
-   - `SESSION_SECRET`: a random secret with at least 32 characters. Generate one with a password manager; do not reuse your admin password.
-6. Apply migration `migrations/0001_initial.sql` to the D1 database.
-7. After configuring Preview, test `/api/health`. It should return all four checks as true.
+Never put secrets in HTML, JavaScript, Wrangler TOML or Git commits. Never share secret values in chat.
 
 ## API routes
 
-- `GET /api/health` — configuration check; does not reveal secret values.
-- `POST /api/auth/login` — JSON body: `{"password":"..."}`.
-- `GET /api/auth/me` — reports whether the current session is authenticated.
-- `POST /api/auth/logout` — clears the admin cookie.
-- `GET /api/content` — authenticated draft retrieval.
-- `PUT /api/content` — authenticated draft save; JSON body: `{"content":{...}}`.
-- `GET /api/media` — authenticated media metadata list.
-- `POST /api/media` — authenticated multipart upload using field name `file`.
+- `GET /api/health` — configuration checks only.
+- `POST /api/auth/login` — JSON body `{"password":"..."}`.
+- `GET /api/auth/me` — session status.
+- `POST /api/auth/logout` — clears session.
+- `GET /api/content` and `PUT /api/content` — authenticated draft read/save.
+- `GET /api/media` — authenticated media list.
+- `POST /api/media` — authenticated multipart upload; form field `file`.
 
-## Security and limitations
+## Media limits and privacy
 
-- No password, session secret, or uploaded file is stored in the Git repository.
-- Uploaded R2 objects are private by default. This phase does not expose public file URLs.
-- The current upload endpoint accepts JPG, PNG, WEBP and PDF only, up to 10 MB per file.
-- Content save creates a revision snapshot before replacing the draft. A full revision browser/restore UI is not included yet.
-- No public publishing endpoint exists yet. Drafts cannot be published from this backend.
-- Add MFA and a dedicated security review before treating this as a production CMS.
-- Configure bindings/secrets separately for Preview and Production. Never put secrets in JavaScript or HTML.
+- JPG, PNG, WEBP and PDF only; maximum 8 MB per file.
+- Each upload creates a commit in the configured GitHub branch and triggers a Pages build.
+- The repository is public, so uploaded files are public. Do not upload private or sensitive documents.
+- GitHub storage, API and Pages build limits apply. This is not unlimited storage or a guarantee of zero future service changes.
+- Media deletion/replacement UI and public publishing are not implemented yet.
 
-## Local machine requirements
+## Security status
 
-No Docker, local database, Node build chain, React or Vite is required for this Pages Functions deployment workflow. Cloudflare runs the backend. The user's Windows PC only needs a browser and a text editor for the manual setup steps.
+This is initial scaffolding, not production-ready CMS software. Use Preview only until login, upload and content flows have been tested and reviewed. The GitHub token must be fine-grained and restricted to this repository. MFA and a full security review remain future work.
+
+## Local requirements
+
+No Docker, local database, Node build chain, React or Vite is required for this setup.
