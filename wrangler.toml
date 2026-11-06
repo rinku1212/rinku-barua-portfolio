@@ -7,7 +7,3 @@ binding = "DB"
 database_name = "rinku-portfolio-db"
 database_id = "58044790-3387-4717-b18a-ce6d0b7e9fde"
 migrations_dir = "migrations"
-
-[[r2_buckets]]
-binding = "MEDIA"
-bucket_name = "rinku-portfolio-media"
