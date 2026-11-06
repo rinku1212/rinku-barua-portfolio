@@ -25,7 +25,7 @@ export async function onRequestPut({ request, env }) {
   try { body = await request.json(); } catch {
     return json({ ok: false, error: "Invalid JSON body." }, 400);
   }
-  if (!body || typeof body.content !== "object" || Array.isArray(body.content)) {
+  if (!body || !body.content || typeof body.content !== "object" || Array.isArray(body.content)) {
     return json({ ok: false, error: "A content object is required." }, 400);
   }
 
