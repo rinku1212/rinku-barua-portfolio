@@ -34,6 +34,9 @@ Never put secrets in HTML, JavaScript, Wrangler TOML or Git commits. Never share
 - `GET /api/auth/me` — session status.
 - `POST /api/auth/logout` — clears session.
 - `GET /api/content` and `PUT /api/content` — authenticated draft read/save.
+- `POST /api/content/publish` — authenticated, explicit publish of the saved draft.
+- `GET /api/public-content` — public read-only published content used by the portfolio front end.
+- `GET /api/revisions` and `POST /api/revisions` — authenticated revision history and restore-to-draft.
 - `GET /api/media` — authenticated media list.
 - `POST /api/media` — authenticated multipart upload; form field `file`.
 
@@ -47,7 +50,7 @@ Never put secrets in HTML, JavaScript, Wrangler TOML or Git commits. Never share
 
 ## Security status
 
-This is initial scaffolding, not production-ready CMS software. Use Preview only until login, upload and content flows have been tested and reviewed. The GitHub token must be fine-grained and restricted to this repository. MFA and a full security review remain future work.
+This remains an incremental CMS foundation, not a complete visual drag-and-drop builder. The Admin screen currently provides login, health checks, media upload/listing, a structured editor for selected text/theme/contact/CV fields, advanced JSON draft editing, explicit publish, revision history and restore-to-draft. The public site applies the supported published fields through `site-content.js`. Full section/component builder, analytics, media deletion, multiple-CV profile manager, page builder, and end-to-end security review remain future work. Use Preview only until login, save, publish, restore and upload flows have been tested. The GitHub token must be fine-grained and restricted to this repository. MFA and a full security review remain future work.
 
 ## Local requirements
 
