@@ -44,7 +44,7 @@
         document.querySelectorAll("#contact a[href^='tel:']").forEach(a => a.href = "tel:" + digits);
       }
 
-      if (typeof content.cv?.url === "string" && content.cv.url.trim()) {
+      if (typeof content.cv?.url === "string" && /^(https?:\/\/|\/)/i.test(content.cv.url.trim()) && !content.cv.url.trim().startsWith("//")) {
         const area = document.querySelector(".cv-download-area");
         if (area) {
           const old = area.querySelector(".cv-placeholder");
