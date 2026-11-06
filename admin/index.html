@@ -47,6 +47,15 @@
 <div id="visualMessage" class="message" role="status"></div>
 <details style="margin-top:18px"><summary style="cursor:pointer;font-weight:700">Advanced JSON editor</summary><p class="note">For advanced content structure. Invalid JSON cannot be saved.</p><textarea id="contentEditor" spellcheck="false" aria-label="Website content JSON" placeholder="Loading draft…"></textarea><div class="actions"><button class="btn secondary" id="loadDraft">Reload JSON</button><button class="btn gold" id="saveDraft">Save JSON draft</button></div><div id="draftMessage" class="message" role="status"></div></details>
 </article>
+<article class="panel">
+<h2>Revision history</h2>
+<p class="muted">Restore an earlier saved snapshot into the draft. Restoring does not publish it.</p>
+<div class="actions"><button class="btn secondary" id="refreshRevisions">Refresh history</button></div>
+<label for="revisionSelect">Available snapshots</label>
+<select id="revisionSelect" style="width:100%;border:1px solid #cbd3dd;border-radius:8px;padding:12px;background:#fff"><option value="">Loading history…</option></select>
+<div class="actions"><button class="btn secondary" id="restoreRevision">Restore selected snapshot</button></div>
+<div id="revisionMessage" class="message" role="status"></div>
+</article>
 <article class="panel"><h2>Live website preview</h2><p class="muted">Preview the currently deployed branch. Draft changes are not reflected here until a separate publishing workflow is implemented.</p><iframe class="preview" title="Portfolio website preview" src="/" loading="lazy"></iframe><div class="actions"><a class="btn secondary" href="/" target="_blank" rel="noopener">Open website in new tab</a></div></article>
 </div>
 <div class="warning" style="margin-top:20px"><strong>Current scope:</strong> This is the first secure admin console, not yet a full visual drag-and-drop website builder. Public publishing, section builder, analytics dashboard, CV version manager and revision restore are not implemented. Keep using Preview until those features are built and tested.</div>
@@ -57,13 +66,16 @@
 const $=id=>document.getElementById(id);
 async function api(url,options={}){const response=await fetch(url,{credentials:"same-origin",...options});const data=await response.json().catch(()=>({ok:false,error:"Unexpected server response."}));if(!response.ok)throw new Error(data.error||"Request failed ("+response.status+").");return data}
 function message(id,text,type=""){const el=$(id);el.textContent=text;el.className="message "+type}
-function showDashboard(){ $("loginView").classList.add("hidden");$("dashboard").classList.remove("hidden");refreshHealth();loadDraft();loadMedia()}
+function showDashboard(){ $("loginView").classList.add("hidden");$("dashboard").classList.remove("hidden");refreshHealth();loadDraft();loadMedia();loadRevisions()}
 function showLogin(){ $("dashboard").classList.add("hidden");$("loginView").classList.remove("hidden")}
 async function checkSession(){try{const d=await api("/api/auth/me");if(d.authenticated)showDashboard();else showLogin()}catch{showLogin()}}
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();message("loginMessage","Signing in…");try{await api("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:$("password").value})});$("password").value="";showDashboard()}catch(err){message("loginMessage",err.message,"err")}});
 $("logoutBtn").addEventListener("click",async()=>{try{await api("/api/auth/logout",{method:"POST"})}finally{showLogin()}});
 async function refreshHealth(){const box=$("healthList");box.innerHTML='<div class="status"><span class="dot"></span>Checking…</div>';try{const d=await api("/api/health");box.innerHTML=Object.entries(d.checks||{}).map(([k,v])=>'<div class="status"><span class="dot '+(v?"ok":"bad")+'"></span><span>'+k.replace(/[A-Z]/g,m=>" "+m.toLowerCase())+'</span><strong style="margin-left:auto">'+(v?"Ready":"Missing")+'</strong></div>').join("");message("healthMessage",d.ok?"All configuration checks passed.":"Some configuration is incomplete.",d.ok?"ok":"err")}catch(err){message("healthMessage",err.message,"err")}}
 $("refreshHealth").addEventListener("click",refreshHealth);
+async function loadRevisions(){const select=$("revisionSelect");if(!select)return;select.innerHTML='<option value="">Loading…</option>';try{const d=await api("/api/revisions");select.innerHTML="";(d.items||[]).forEach(item=>{const option=document.createElement("option");option.value=item.id;option.textContent="#"+item.id+" · "+item.revision_note+" · "+item.created_at;select.append(option)});if(!select.options.length)select.innerHTML='<option value="">No snapshots available</option>';message("revisionMessage",(d.items||[]).length+" snapshot(s) loaded.","ok")}catch(err){select.innerHTML='<option value="">Could not load history</option>';message("revisionMessage",err.message,"err")}}
+$("refreshRevisions").addEventListener("click",loadRevisions);
+$("restoreRevision").addEventListener("click",async()=>{const revisionId=Number($("revisionSelect").value);if(!revisionId){message("revisionMessage","Select a snapshot first.","err");return}if(!confirm("Restore this snapshot into the current draft? The current draft will also be saved as a new snapshot. Nothing will be published."))return;try{await api("/api/revisions",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({revisionId})});await loadDraft();await loadRevisions();message("revisionMessage","Snapshot restored to draft. Review and publish when ready.","ok")}catch(err){message("revisionMessage",err.message,"err")}});
 function getPath(obj,path){return path.split(".").reduce((v,k)=>v&&v[k],obj)}
 function setPath(obj,path,value){const parts=path.split(".");let target=obj;parts.slice(0,-1).forEach(k=>{if(!target[k]||typeof target[k]!=="object")target[k]={};target=target[k]});target[parts[parts.length-1]]=value}
 const visualFields={"hero.name":"vHeroName","hero.role":"vHeroRole","hero.description":"vHeroDescription","about.intro":"vAboutIntro","contact.title":"vContactTitle","contact.email":"vContactEmail","contact.phone":"vContactPhone","contact.location":"vContactLocation","contact.intro":"vContactIntro","cv.url":"vCvUrl","cv.label":"vCvLabel","theme.navy":"vNavy","theme.gold":"vGold"};
